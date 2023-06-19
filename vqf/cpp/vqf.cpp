@@ -351,6 +351,8 @@ void VQF::updateMag(const vqf_real_t dt, const vqf_real_t mag[3])
         }
     }
 
+    debug.magYaw = atan2(magEarth[0], magEarth[1]);
+
     // calculate disagreement angle based on current magnetometer measurement
     state.lastMagDisAngle = atan2(magEarth[0], magEarth[1]) - state.delta;
 
@@ -397,6 +399,8 @@ void VQF::updateMag(const vqf_real_t dt, const vqf_real_t mag[3])
     state.delta += k*state.lastMagDisAngle;
     // calculate correction angular rate to facilitate debugging
     state.lastMagCorrAngularRate = k*state.lastMagDisAngle/coeffs.magTs;
+
+    debug.k = k;
 
     // make sure delta is in the range [-pi, pi]
     if (state.delta > vqf_real_t(M_PI)) {
@@ -623,6 +627,11 @@ void VQF::setRestDetectionThresholds(vqf_real_t thGyr, vqf_real_t thAcc)
 {
     params.restThGyr = thGyr;
     params.restThAcc = thAcc;
+}
+
+const VQFDebug& VQF::getDebugVars() const
+{
+    return debug;
 }
 
 const VQFParams& VQF::getParams() const

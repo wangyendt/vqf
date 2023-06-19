@@ -556,6 +556,11 @@ struct VQFCoefficients
     double magNormDipLpA[2];
 };
 
+struct VQFDebug{
+    vqf_real_t k;
+    vqf_real_t magYaw;
+};
+
 /**
  * @brief A Versatile Quaternion-based Filter for IMU Orientation Estimation.
  *
@@ -843,6 +848,10 @@ public:
     void setRestDetectionThresholds(vqf_real_t thGyr, vqf_real_t thAcc);
 
     /**
+     * @brief Returns the current debug variables.
+     */
+    const VQFDebug& getDebugVars() const;
+    /**
      * @brief Returns the current parameters.
      */
     const VQFParams& getParams() const;
@@ -1059,6 +1068,8 @@ protected:
      * See #getCoeffs.
      */
     VQFCoefficients coeffs;
+
+    VQFDebug debug;
 };
 
 #endif // VQF_HPP
