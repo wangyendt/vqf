@@ -159,6 +159,18 @@ void VQF::updateAcc(const vqf_real_t dt, const vqf_real_t acc[3])
         accCorrQuat[2] = 0;
         accCorrQuat[3] = 0;
     }
+
+    if (state.shouldResetYaw) {
+        vqf_real_t yaw = atan2(
+                2.0 * (accCorrQuat[0] * accCorrQuat[3] + accCorrQuat[1] * accCorrQuat[2]),
+                1.0 - 2.0 * (accCorrQuat[2] * accCorrQuat[2] + accCorrQuat[3] * accCorrQuat[3])
+        );
+        vqf_real_t quat_delta[4] = {cos(yaw / 2), 0, 0, -sin(yaw / 2)};
+        quatMultiply(quat_delta, accCorrQuat, accCorrQuat);
+        normalize(accCorrQuat, 4);
+        state.shouldResetYaw = false;
+    }
+
     quatMultiply(accCorrQuat, state.accQuat, state.accQuat);
     normalize(state.accQuat, 4);
 
@@ -662,6 +674,7 @@ void VQF::resetState()
 
     state.restDetected = false;
     state.magDistDetected = true;
+    state.shouldResetYaw = true;
 
     std::fill(state.lastAccLp, state.lastAccLp+3, 0);
     std::fill(state.accLpState, state.accLpState + 3*2, NaN);

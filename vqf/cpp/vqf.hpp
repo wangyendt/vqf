@@ -309,6 +309,8 @@ struct VQFState {
      */
     bool magDistDetected;
 
+    bool shouldResetYaw;
+
     /**
      * @brief Last low-pass filtered acceleration in the \f$\mathcal{I}_i\f$ frame.
      */
