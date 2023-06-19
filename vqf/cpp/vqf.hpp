@@ -648,7 +648,7 @@ public:
      *
      * @param gyr gyroscope measurement in rad/s
      */
-    void updateGyr(const vqf_real_t gyr[3]);
+    void updateGyr(const vqf_real_t dt, const vqf_real_t gyr[3]);
     /**
      * @brief Performs accelerometer update step.
      *
@@ -659,7 +659,7 @@ public:
      *
      * @param acc accelerometer measurement in m/s²
      */
-    void updateAcc(const vqf_real_t acc[3]);
+    void updateAcc(const vqf_real_t dt, const vqf_real_t acc[3]);
     /**
      * @brief Performs magnetometer update step.
      *
@@ -670,20 +670,20 @@ public:
      *
      * @param mag magnetometer measurement in arbitrary units
      */
-    void updateMag(const vqf_real_t mag[3]);
+    void updateMag(const vqf_real_t dt, const vqf_real_t mag[3]);
     /**
      * @brief Performs filter update step for one sample (magnetometer-free).
      * @param gyr gyroscope measurement in rad/s
      * @param acc accelerometer measurement in m/s²
      */
-    void update(const vqf_real_t gyr[3], const vqf_real_t acc[3]);
+    void update(const vqf_real_t dt, const vqf_real_t gyr[3], const vqf_real_t acc[3]);
     /**
      * @brief Performs filter update step for one sample (with magnetometer measurement).
      * @param gyr gyroscope measurement in rad/s
      * @param acc accelerometer measurement in m/s²
      * @param mag magnetometer measurement in arbitrary units
      */
-    void update(const vqf_real_t gyr[3], const vqf_real_t acc[3], const vqf_real_t mag[3]);
+    void update(const vqf_real_t dt, const vqf_real_t gyr[3], const vqf_real_t acc[3], const vqf_real_t mag[3]);
 
     /**
      * @brief Performs batch update for multiple samples at once.
@@ -719,7 +719,7 @@ public:
      * @param outRest output buffer for the rest detection state (N elements, can be a null pointer)
      * @param outMagDist output buffer for the magnetic disturbance state (N elements, can be a null pointer)
      */
-    void updateBatch(const vqf_real_t gyr[], const vqf_real_t acc[], const vqf_real_t mag[], size_t N,
+    void updateBatch(const vqf_real_t dt[], const vqf_real_t gyr[], const vqf_real_t acc[], const vqf_real_t mag[], size_t N,
                      vqf_real_t out6D[], vqf_real_t out9D[], vqf_real_t outDelta[], vqf_real_t outBias[],
                      vqf_real_t outBiasSigma[], bool outRest[], bool outMagDist[]);
 

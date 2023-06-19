@@ -70,8 +70,10 @@ VQF::VQF(const VQFParams &params, vqf_real_t gyrTs, vqf_real_t accTs, vqf_real_t
     setup();
 }
 
-void VQF::updateGyr(const vqf_real_t gyr[3])
+void VQF::updateGyr(const vqf_real_t dt, const vqf_real_t gyr[3])
 {
+    coeffs.gyrTs = dt;
+
     // rest detection
     if (params.restBiasEstEnabled || params.magDistRejectionEnabled) {
         filterVec(gyr, 3, params.restFilterTau, coeffs.gyrTs, coeffs.restGyrLpB, coeffs.restGyrLpA,
@@ -104,8 +106,10 @@ void VQF::updateGyr(const vqf_real_t gyr[3])
     }
 }
 
-void VQF::updateAcc(const vqf_real_t acc[3])
+void VQF::updateAcc(const vqf_real_t dt, const vqf_real_t acc[3])
 {
+    coeffs.accTs = dt;
+
     // ignore [0 0 0] samples
     if (acc[0] == vqf_real_t(0.0) && acc[1] == vqf_real_t(0.0) && acc[2] == vqf_real_t(0.0)) {
         return;
@@ -285,8 +289,10 @@ void VQF::updateAcc(const vqf_real_t acc[3])
 #endif
 }
 
-void VQF::updateMag(const vqf_real_t mag[3])
+void VQF::updateMag(const vqf_real_t dt, const vqf_real_t mag[3])
 {
+    coeffs.magTs = dt;
+
     // ignore [0 0 0] samples
     if (mag[0] == vqf_real_t(0.0) && mag[1] == vqf_real_t(0.0) && mag[2] == vqf_real_t(0.0)) {
         return;
@@ -400,28 +406,28 @@ void VQF::updateMag(const vqf_real_t mag[3])
     }
 }
 
-void VQF::update(const vqf_real_t gyr[3], const vqf_real_t acc[3])
+void VQF::update(const vqf_real_t dt, const vqf_real_t gyr[3], const vqf_real_t acc[3])
 {
-    updateGyr(gyr);
-    updateAcc(acc);
+    updateGyr(dt, gyr);
+    updateAcc(dt, acc);
 }
 
-void VQF::update(const vqf_real_t gyr[3], const vqf_real_t acc[3], const vqf_real_t mag[3])
+void VQF::update(const vqf_real_t dt, const vqf_real_t gyr[3], const vqf_real_t acc[3], const vqf_real_t mag[3])
 {
-    updateGyr(gyr);
-    updateAcc(acc);
-    updateMag(mag);
+    updateGyr(dt, gyr);
+    updateAcc(dt, acc);
+    updateMag(dt, mag);
 }
 
-void VQF::updateBatch(const vqf_real_t gyr[], const vqf_real_t acc[], const vqf_real_t mag[], size_t N,
+void VQF::updateBatch(const vqf_real_t dt[], const vqf_real_t gyr[], const vqf_real_t acc[], const vqf_real_t mag[], size_t N,
                       vqf_real_t out6D[], vqf_real_t out9D[], vqf_real_t outDelta[], vqf_real_t outBias[],
                       vqf_real_t outBiasSigma[], bool outRest[], bool outMagDist[])
 {
     for (size_t i = 0; i < N; i++) {
         if (mag) {
-            update(gyr+3*i, acc+3*i, mag+3*i);
+            update(*(dt+i), gyr+3*i, acc+3*i, mag+3*i);
         } else {
-            update(gyr+3*i, acc+3*i);
+            update(*(dt+i), gyr+3*i, acc+3*i);
         }
         if (out6D) {
             getQuat6D(out6D+4*i);
