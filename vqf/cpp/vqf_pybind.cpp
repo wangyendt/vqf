@@ -242,5 +242,6 @@ PYBIND11_MODULE(vqf_py, m) {
 
     py::class_<VQFDebug>(m, "VQFDebug")
             .def_readwrite("k", &VQFDebug::k)
-            .def_readwrite("magYaw", &VQFDebug::magYaw);
+            .def_readwrite("magYaw", &VQFDebug::magYaw)
+            .def_readwrite("mag_measurement", &VQFDebug::mag_measurement);
 }

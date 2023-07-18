@@ -367,6 +367,7 @@ void VQF::updateMag(const vqf_real_t dt, const vqf_real_t mag[3])
 
     // calculate disagreement angle based on current magnetometer measurement
     state.lastMagDisAngle = atan2(magEarth[0], magEarth[1]) - state.delta;
+    debug.mag_measurement = atan2(magEarth[0], magEarth[1]);
 
     // make sure the disagreement angle is in the range [-pi, pi]
     if (state.lastMagDisAngle > vqf_real_t(M_PI)) {

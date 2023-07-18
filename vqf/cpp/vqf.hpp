@@ -561,6 +561,7 @@ struct VQFCoefficients
 struct VQFDebug{
     vqf_real_t k;
     vqf_real_t magYaw;
+    vqf_real_t mag_measurement;
 };
 
 /**
